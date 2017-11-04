@@ -1,4 +1,4 @@
-FROM alpine:latest
+FROM alpine:edge
 MAINTAINER Vladimir Osintsev <oc@co.ru>
 
 RUN apk add --no-cache tor && \
