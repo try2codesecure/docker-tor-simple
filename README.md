@@ -1,6 +1,6 @@
 # docker-tor-simple
 
-[![](https://img.shields.io/docker/build/osminogin/tor-simple.svg)](https://hub.docker.com/r/osminogin/tor-simple/builds/) [![](https://img.shields.io/docker/stars/osminogin/tor-simple.svg)](https://hub.docker.com/r/osminogin/tor-simple) [![](https://images.microbadger.com/badges/image/osminogin/tor-simple.svg)](https://microbadger.com/images/osminogin/tor-simple) [![License: MIT](https://img.shields.io/badge/License-MIT-lightgrey.svg)](https://opensource.org/licenses/MIT)
+[![](https://img.shields.io/docker/build/osminogin/tor-simple.svg)](https://hub.docker.com/r/osminogin/tor-simple/builds/) [![](https://images.microbadger.com/badges/version/osminogin/tor-simple.svg)](https://microbadger.com/images/osminogin/tor-simple) [![](https://images.microbadger.com/badges/commit/osminogin/tor-simple.svg)](https://microbadger.com/images/osminogin/tor-simple) [![](https://images.microbadger.com/badges/image/osminogin/tor-simple.svg)](https://microbadger.com/images/osminogin/tor-simple) [![](https://img.shields.io/docker/stars/osminogin/tor-simple.svg)](https://hub.docker.com/r/osminogin/tor-simple)  [![License: MIT](https://img.shields.io/badge/License-MIT-lightgrey.svg)](https://opensource.org/licenses/MIT)
 
 **Smallest minimal docker container for Tor network proxy daemon.**
 
@@ -11,8 +11,16 @@ The image is based on great [Alpine Linux](https://alpinelinux.org/) distributio
 Star this project on Docker Hub :star2: https://hub.docker.com/r/osminogin/tor-simple/
 
 
-## Getting started
+## Ports
 
+* `9050` SOCKSv5 (without auth)
+
+## Volumes
+
+* `/var/lib/tor` data dir.
+
+
+## Getting started
 
 ### Installation
 
@@ -33,6 +41,9 @@ docker build -t tor github.com/osminogin/docker-tor-simple
 
 ```bash
 docker run -p 127.0.0.1:9050:9050 --name tor osminogin/tor-simple
+
+# or
+docker-compose up
 ```
 
 After start Tor proxy available on `localhost:9050`
@@ -42,10 +53,23 @@ After start Tor proxy available on `localhost:9050`
 Don't bind SOCKSv5 port 9050 to public network addresses if you don't know exactly what you are doing (better bind to localhost as in the example above).
 
 
-## Ports
+## Advanced usage
 
-* `9050` SOCKSv5 (without auth)
+You can copy original tor config from container, modify and mount them back inside. Changing the configuration file is required for running Tor as exit node, relay or bridge. For some operation modes you need to expose additional ports (9001, 9030, 9051).
 
+```bash
+# Copy config
+docker cp tor:/etc/tor/torrc /root/torrc
+
+# ... modify torrc and run
+docker run --rm --name tor \
+  --publish 127.0.0.1:9050:9050 \
+  --expose 9001 --publish 9001:9001 \ # ORPort
+  --expose 9030 --publish 9030:9030 \
+  --expose 9051 --publish 9051:9051 \
+  --volume /root/torrc:/etc/tor/torrc:ro \
+  osminogin/tor-simple
+```
 
 ## Unit file for systemd
 
@@ -54,8 +78,9 @@ Don't bind SOCKSv5 port 9050 to public network addresses if you don't know exact
 ```ini
 [Unit]
 Description=Tor service
-After=docker.service
+Wants=network-online.target
 Requires=docker.service
+After=docker.service network.target network-online.target
 
 [Service]
 TimeoutStartSec=0
