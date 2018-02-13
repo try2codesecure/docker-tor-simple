@@ -1,6 +1,6 @@
 GIT_COMMIT = $(strip $(shell git rev-parse --short HEAD))
 
-DOCKER_IMAGE ?= osminogin/tor-simple
+DOCKER_IMAGE ?= try2codesecure/docker_tord
 DOCKER_TAG = latest
 
 # Build Docker image
