@@ -3,7 +3,7 @@ FROM alpine:edge
 ARG BUILD_DATE
 ARG VCS_REF
 
-LABEL maintainer="oc@co.ru" \
+LABEL maintainer="try2codesecure" \
     com.microscaling.license="MIT" \
     org.label-schema.build-date=$BUILD_DATE \
     org.label-schema.name="Tor network client" \
