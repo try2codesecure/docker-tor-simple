@@ -11,12 +11,9 @@ The image is based on great [Alpine Linux](https://alpinelinux.org/) distributio
 Star this project on Docker Hub :star2: https://hub.docker.com/r/try2codesecure/docker_tord/
 
 
-## Ports
-
-* `9050` SOCKSv5 (without auth)
-
 ## Volumes
 
+* `/etc/tor` config dir.
 * `/var/lib/tor` data dir.
 
 
@@ -33,14 +30,14 @@ docker pull try2codesecure/docker_tord
 Alternatively you can build the image yourself.
 
 ```bash
-docker build -t tor github.com/osminogin/docker-tor-simple
+docker build -t tor github.com/try2codesecure/docker_tord
 ```
 
 
 ### Quickstart
 
 ```bash
-docker run -p 127.0.0.1:9050:9050 --name tor try2codesecure/docker_tord
+docker run -p 9001:9001 -p 9030:9030 -v --name tor try2codesecure/docker_tord
 
 # or
 docker-compose up
@@ -63,11 +60,9 @@ docker cp tor:/etc/tor/torrc /root/torrc
 
 # ... modify torrc and run
 docker run --rm --name tor \
-  --publish 127.0.0.1:9050:9050 \
-  --expose 9001 --publish 9001:9001 \ # ORPort
-  --expose 9030 --publish 9030:9030 \
-  --expose 9051 --publish 9051:9051 \
-  --volume /root/torrc:/etc/tor/torrc:ro \
+  -p 9001:9001 \ # ORPort
+  -p 9030:9030 \ # DIRPort
+  -v /root/torrc:/etc/tor/torrc:ro \
   try2codesecure/docker_tord
 ```
 
