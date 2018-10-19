@@ -1,7 +1,6 @@
 GIT_COMMIT = $(strip $(shell git rev-parse --short HEAD))
-
 DOCKER_IMAGE ?= try2codesecure/docker_tord
-DOCKER_TAG = latest
+DOCKER_TAG = $(shell git branch | grep \* | cut -d ' ' -f2)
 
 # Build Docker image
 build: docker_build output

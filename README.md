@@ -1,6 +1,6 @@
 # docker-tor-simple
 
-[![](https://img.shields.io/docker/build/osminogin/tor-simple.svg)](https://hub.docker.com/r/osminogin/tor-simple/builds/) [![](https://images.microbadger.com/badges/version/osminogin/tor-simple.svg)](https://microbadger.com/images/osminogin/tor-simple) [![](https://images.microbadger.com/badges/commit/osminogin/tor-simple.svg)](https://microbadger.com/images/osminogin/tor-simple) [![](https://images.microbadger.com/badges/image/osminogin/tor-simple.svg)](https://microbadger.com/images/osminogin/tor-simple) [![](https://img.shields.io/docker/stars/osminogin/tor-simple.svg)](https://hub.docker.com/r/osminogin/tor-simple)  [![License: MIT](https://img.shields.io/badge/License-MIT-lightgrey.svg)](https://opensource.org/licenses/MIT)
+[![](https://img.shields.io/docker/build/try2codesecure/docker_tord.svg)](https://hub.docker.com/r/try2codesecure/docker_tord/builds/) [![](https://images.microbadger.com/badges/version/try2codesecure/docker_tord.svg)](https://microbadger.com/images/try2codesecure/docker_tord) [![](https://images.microbadger.com/badges/commit/try2codesecure/docker_tord.svg)](https://microbadger.com/images/try2codesecure/docker_tord) [![](https://images.microbadger.com/badges/image/try2codesecure/docker_tord.svg)](https://microbadger.com/images/try2codesecure/docker_tord) [![](https://img.shields.io/docker/stars/try2codesecure/docker_tord.svg)](https://hub.docker.com/r/try2codesecure/docker_tord)  [![License: MIT](https://img.shields.io/badge/License-MIT-lightgrey.svg)](https://opensource.org/licenses/MIT)
 
 **Smallest minimal docker container for Tor network proxy daemon.**
 
@@ -8,15 +8,12 @@ Suitable for relay, exit node or hidden service modes with SOCKS5 proxy enabled.
 
 The image is based on great [Alpine Linux](https://alpinelinux.org/) distribution so it is has extremely low size (less than 5 MB).
 
-Star this project on Docker Hub :star2: https://hub.docker.com/r/osminogin/tor-simple/
+Star this project on Docker Hub :star2: https://hub.docker.com/r/try2codesecure/docker_tord/
 
-
-## Ports
-
-* `9050` SOCKSv5 (without auth)
 
 ## Volumes
 
+* `/etc/tor` config dir.
 * `/var/lib/tor` data dir.
 
 
@@ -24,23 +21,23 @@ Star this project on Docker Hub :star2: https://hub.docker.com/r/osminogin/tor-s
 
 ### Installation
 
-Automated builds of the image are available on [Docker Hub](https://hub.docker.com/r/osminogin/tor-simple/) and is the recommended method of installation.
+Automated builds of the image are available on [Docker Hub](https://hub.docker.com/r/try2codesecure/docker_tord/) and is the recommended method of installation.
 
 ```bash
-docker pull osminogin/tor-simple
+docker pull try2codesecure/docker_tord
 ```
 
 Alternatively you can build the image yourself.
 
 ```bash
-docker build -t tor github.com/osminogin/docker-tor-simple
+docker build -t tor github.com/try2codesecure/docker_tord
 ```
 
 
 ### Quickstart
 
 ```bash
-docker run -p 127.0.0.1:9050:9050 --name tor osminogin/tor-simple
+docker run -p 9001:9001 -p 9030:9030 -v --name tor try2codesecure/docker_tord
 
 # or
 docker-compose up
@@ -63,12 +60,10 @@ docker cp tor:/etc/tor/torrc /root/torrc
 
 # ... modify torrc and run
 docker run --rm --name tor \
-  --publish 127.0.0.1:9050:9050 \
-  --expose 9001 --publish 9001:9001 \ # ORPort
-  --expose 9030 --publish 9030:9030 \
-  --expose 9051 --publish 9051:9051 \
-  --volume /root/torrc:/etc/tor/torrc:ro \
-  osminogin/tor-simple
+  -p 9001:9001 \ # ORPort
+  -p 9030:9030 \ # DIRPort
+  -v /root/torrc:/etc/tor/torrc:ro \
+  try2codesecure/docker_tord
 ```
 
 ## Unit file for systemd
@@ -86,8 +81,8 @@ After=docker.service network.target network-online.target
 TimeoutStartSec=0
 Restart=always
 RestartSec=15s
-ExecStartPre=/usr/bin/docker pull osminogin/tor-simple
-ExecStart=/usr/bin/docker run --rm --name tor -p 127.0.0.1:9050:9050 osminogin/tor-simple
+ExecStartPre=/usr/bin/docker pull try2codesecure/docker_tord
+ExecStart=/usr/bin/docker run --rm --name tor -p 127.0.0.1:9050:9050 try2codesecure/docker_tord
 ExecStop=/usr/bin/docker stop tor
 
 [Install]
@@ -104,7 +99,7 @@ Example webserver deployment config with microservice architecture to setup Tor 
 
 ```yaml
 tor-node:
-  image: osminogin/tor-simple
+  image: try2codesecure/docker_tord
   links:
     - nginx:myservice
 
