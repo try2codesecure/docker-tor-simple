@@ -1,4 +1,4 @@
-# docker-tor-simple
+# docker_tord
 
 [![](https://img.shields.io/docker/build/try2codesecure/docker_tord.svg)](https://hub.docker.com/r/try2codesecure/docker_tord/builds/) [![](https://images.microbadger.com/badges/version/try2codesecure/docker_tord.svg)](https://microbadger.com/images/try2codesecure/docker_tord) [![](https://images.microbadger.com/badges/commit/try2codesecure/docker_tord.svg)](https://microbadger.com/images/try2codesecure/docker_tord) [![](https://images.microbadger.com/badges/image/try2codesecure/docker_tord.svg)](https://microbadger.com/images/try2codesecure/docker_tord) [![](https://img.shields.io/docker/stars/try2codesecure/docker_tord.svg)](https://hub.docker.com/r/try2codesecure/docker_tord)  [![License: MIT](https://img.shields.io/badge/License-MIT-lightgrey.svg)](https://opensource.org/licenses/MIT)
 
